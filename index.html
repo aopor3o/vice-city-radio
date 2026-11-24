@@ -1,0 +1,360 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Leonida Radio Dial</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Monoton&family=Pacifico&family=Outfit:wght@400;600;700&display=swap">
+<style>
+* { box-sizing: border-box; }
+body { margin: 0; }
+[hidden] { display: none !important; }
+
+/* Layout: one sunset hero with a script logo, then a wrapping grid of station "presets" — each card is the link. Single dusk theme by choice. */
+:root {
+  --night: #1a0b2e;
+  --dusk: #2d1450;
+  --pink: #ff4fa3;
+  --cyan: #3ee6e0;
+  --sun: #ffb36b;
+  --cream: #fff3fa;
+  --muted: #cdb6e6;
+  --card: rgba(255,255,255,0.06);
+  --display: "Pacifico", "Brush Script MT", cursive;
+  --neon: "Monoton", "Outfit", sans-serif;
+  --body: "Outfit", system-ui, -apple-system, sans-serif;
+  color-scheme: dark;
+}
+body {
+  background: var(--night);
+  color: var(--cream);
+  font-family: var(--body);
+  font-size: 16px;
+  line-height: 1.5;
+}
+.hero {
+  margin-top: calc(-1 * env(safe-area-inset-top, 0px));
+  padding-top: calc(env(safe-area-inset-top, 0px) + 3.5rem);
+  padding-bottom: 5.5rem;
+  background:
+    radial-gradient(circle at 50% 108%, var(--sun) 0 9rem, transparent 9.1rem),
+    linear-gradient(180deg, var(--night) 0%, var(--dusk) 45%, #7a1f6e 78%, var(--pink) 100%);
+  position: relative;
+  overflow: hidden;
+  text-align: center;
+}
+.hero::after {
+  /* sun stripes */
+  content: "";
+  position: absolute; left: 0; right: 0; bottom: 0; height: 5rem;
+  background: repeating-linear-gradient(180deg, transparent 0 10px, #7a1f6e 10px 15px);
+  -webkit-mask: radial-gradient(circle at 50% 100%, #000 0 9rem, transparent 9.1rem);
+          mask: radial-gradient(circle at 50% 100%, #000 0 9rem, transparent 9.1rem);
+}
+.wrap {
+  max-width: 1080px;
+  margin: 0 auto;
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+  position: relative;
+  z-index: 1;
+}
+.eyebrow {
+  font-family: var(--neon);
+  color: var(--cyan);
+  letter-spacing: 0.12em;
+  font-size: clamp(0.9rem, 2.4vw, 1.2rem);
+  text-shadow: 0 0 12px rgba(62,230,224,0.7);
+  margin: 0 0 0.25rem;
+}
+h1 {
+  font-family: var(--display);
+  font-weight: 400;
+  font-size: clamp(3rem, 11vw, 6rem);
+  line-height: 1.05;
+  margin: 0;
+  color: var(--pink);
+  text-shadow: 0 0 6px rgba(255,79,163,0.8), 0 0 28px rgba(255,79,163,0.55), 3px 3px 0 var(--night);
+  text-wrap: balance;
+}
+.sub {
+  color: var(--cream);
+  max-width: 34rem;
+  margin: 0.9rem auto 0;
+  font-size: 1.05rem;
+}
+main { padding-block: 2.5rem 3rem; }
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(230px, 1fr));
+  gap: 14px;
+  list-style: none;
+  margin: 0; padding: 0;
+}
+.station {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+  height: 100%;
+  box-sizing: border-box;
+  padding: 1.05rem 1.1rem 1rem;
+  border-radius: 16px;
+  background: var(--card);
+  border: 1.5px solid rgba(62,230,224,0.25);
+  color: inherit;
+  text-decoration: none;
+  transition: transform .18s ease, border-color .18s ease, box-shadow .18s ease, background .18s ease;
+  min-width: 0;
+}
+.station:hover, .station:focus-visible {
+  transform: translateY(-3px);
+  border-color: var(--pink);
+  background: rgba(255,79,163,0.10);
+  box-shadow: 0 0 0 1px var(--pink), 0 8px 28px rgba(255,79,163,0.28);
+  outline: none;
+}
+.top { display: flex; align-items: baseline; justify-content: space-between; gap: 0.5rem; }
+.name { font-weight: 700; font-size: 1.15rem; line-height: 1.25; }
+.genre {
+  flex: none;
+  font-size: 0.68rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--night);
+  background: var(--cyan);
+  padding: 0.15rem 0.5rem;
+  border-radius: 999px;
+  white-space: nowrap;
+}
+.desc { color: var(--muted); font-size: 0.93rem; margin: 0; flex: 1; }
+.play {
+  margin-top: 0.4rem;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--sun);
+  font-variant-numeric: tabular-nums;
+}
+.station:hover .play, .station:focus-visible .play { color: var(--pink); }
+.station.soon { opacity: 0.6; border-style: dashed; }
+.station.mix { border-color: rgba(255,179,107,0.45); }
+.station.mix .genre { background: var(--sun); }
+.station.soon:hover { transform: none; border-color: rgba(62,230,224,0.25); background: var(--card); box-shadow: none; }
+.station.soon .play { color: var(--muted); }
+footer {
+  text-align: center;
+  color: var(--muted);
+  font-size: 0.85rem;
+  padding-block: 0 2.5rem;
+}
+footer a { color: var(--cyan); }
+@media (prefers-reduced-motion: reduce) {
+  .station { transition: none; }
+  .station:hover { transform: none; }
+}
+
+/* In-page radio deck (works where YouTube's player is allowed to load) */
+.deck {
+  position: fixed; left: 0; right: 0; bottom: 0; z-index: 20;
+  background: rgba(26,11,46,0.96);
+  border-top: 2px solid var(--pink);
+  box-shadow: 0 -8px 30px rgba(255,79,163,0.25);
+  padding-bottom: env(safe-area-inset-bottom, 0px);
+  backdrop-filter: blur(8px);
+}
+.deck-in {
+  max-width: 1080px; margin: 0 auto;
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+  padding-block: 10px;
+  display: flex; align-items: center; gap: 14px; flex-wrap: wrap;
+}
+.screen {
+  width: 200px; height: 113px; flex: none;
+  border-radius: 10px; overflow: hidden; background: #000;
+  border: 1.5px solid var(--cyan);
+}
+.screen iframe { width: 100%; height: 100%; display: block; border: 0; }
+.deck-info { display: flex; flex-direction: column; min-width: 0; flex: 1 1 180px; }
+.deck-label { font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.12em; color: var(--cyan); }
+.deck-name { font-family: var(--display); font-weight: 400; font-size: 1.5rem; line-height: 1.2; color: var(--pink); }
+.deck-msg { font-size: 0.85rem; color: var(--sun); }
+.deck-ctl { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; }
+.deck-ctl button, .deck-ctl a {
+  font: 600 0.9rem var(--body);
+  color: var(--night); background: var(--cyan);
+  border: 0; border-radius: 999px; padding: 0.5rem 0.95rem;
+  cursor: pointer; text-decoration: none;
+}
+.deck-ctl button:hover, .deck-ctl a:hover { background: var(--pink); color: var(--cream); }
+.deck-ctl button:focus-visible, .deck-ctl a:focus-visible { outline: 2px solid var(--sun); outline-offset: 2px; }
+.deck-ctl .ghost { background: transparent; color: var(--muted); border: 1.5px solid rgba(205,182,230,0.4); }
+body.deck-open main { padding-bottom: 12rem; }
+.station.on { border-color: var(--pink); box-shadow: 0 0 0 1px var(--pink), 0 0 24px rgba(255,79,163,0.35); }
+.station.on .play::after { content: " · On air"; color: var(--pink); }
+@media (max-width: 560px) {
+  .screen { width: 100%; height: auto; aspect-ratio: 16 / 9; max-width: 100%; }
+  body.deck-open main { padding-bottom: 26rem; }
+}
+</style>
+</head>
+<body>
+
+<header class="hero">
+  <div class="wrap">
+    <p class="eyebrow">GTA VI · Leonida</p>
+    <h1>Vice City Radio</h1>
+    <p class="sub">Pick a station, hop in the car. Every tap tunes in at a random song, just like flipping the dial mid-drive.</p>
+  </div>
+</header>
+
+<main class="wrap">
+  <ul class="grid" id="grid"></ul>
+</main>
+
+<footer class="wrap">
+  Station uploads by <a href="https://www.youtube.com/@gta6-radiostation/videos" target="_blank" rel="noopener">GTA 6 Radio</a> on YouTube.
+</footer>
+
+<div class="deck" id="deck" hidden>
+  <div class="deck-in">
+    <div class="screen"><div id="yt"></div></div>
+    <div class="deck-info">
+      <span class="deck-label">Now playing</span>
+      <span class="deck-name" id="deckName"></span>
+      <span class="deck-msg" id="deckMsg"></span>
+    </div>
+    <div class="deck-ctl">
+      <button type="button" id="bPlay">Pause</button>
+      <button type="button" id="bSong">New song</button>
+      <button type="button" id="bStation">Next station</button>
+      <a id="bOpen" href="#" target="_blank" rel="noopener" class="ghost">YouTube ↗</a>
+      <button type="button" id="bClose" class="ghost" aria-label="Turn off radio">Off</button>
+    </div>
+  </div>
+</div>
+
+<script>
+const stations = [
+  ["AfroBank FM","Afrobeats","African music and amapiano, hosted by Burna Boy and Palms Trax.","gYU6LoX2MAw",31],
+  ["Back Country Radio","Country","Country cuts with Morgan Wallen and Lana Del Rey on the mic.","Z_Kcq0-wmJ4",24],
+  ["The Chamber 106.6","Metal","Heavy metal hosted by Slayer's Kerry King and Tom Araya.","fqMm_h9VKPc",22],
+  ["CircoLoco Records Radio","Dance","Late-night dance and electronic from the CircoLoco crew.","Kvarw9q9Zh4",27],
+  ["Cocoteo FM","Latin","Modern Latin hits with Bad Bunny and RaiNao hosting.","qtrFpZpj13g",30],
+  ["Dirty South Classics","Rap","Southern rap classics with Trick Daddy and Trina.","ZSCLM_kGzkU",39],
+  ["Emotion 98.3","Soft rock","The Vice City soft-rock favorite is back for slow drives.","Hr4UgN6UbSw",34],
+  ["Flash FM","Pop","Pop with Robyn and Alex Consani, about 80 songs deep.","Y_ELedvsw7U",80],
+  ["Gloriana Blues Radio","Blues","Smoky, back-porch blues.","-P5WQoSdhHg",23],
+  ["Honey FM","R&B","R&B and soul hosted by TLC's Chilli and T-Boz.","W_e5eUNgIqE",55],
+  ["Kaleidoscope FM","Global pop","Global pop and covers, hosted by Jeremy Irons.","vSgT06Fwrb4",18],
+  ["Leonida Jazz Radio","Jazz","Jazz fusion for cruising the causeway.","13V3vbCH4cw",36],
+  ["Radio La Ola","Latin classics","Classic Latin with Gloria and Emilio Estefan.","GqLYAUj9Gco",25],
+  ["Radio On-U","Reggae","Reggae and dub hosted by Adrian Sherwood.","HCpVk2SHjTs",16],
+  ["Stockyard FM","Indie","Alternative pop and indie.","kyaZvQSUF4k",37],
+  ["Symphony FM","Classical","Classical pieces for a calmer ride.","adG_RoLgOfo",16],
+  ["V-Rock","Classic rock","Classic rock, around 70 songs.","-RwK09PE-lw",69],
+  ["Vice City FM","New wave","Classic pop and new wave.","ZF_ae0Nyb5A",72],
+  ["VCRR","Hip-hop","Vice City Rap Radio with JT and DJ Stevie J, plus a morning show from Charlamagne tha God and Ivy Rivera.","LxdLqlBJIV0",80],
+  ["Worldwide FM","Funk & soul","Funk, soul and global club sounds.","5EEEOXYH4f4",39],
+  ["The Vault Radio","Club · Secret","The music from The Vault nightclub in Vice City. Unlock it by scanning the red Vault poster inside the club with the WAiNK app.","GHQk-Ju5mME",23],
+  ["The Wipe","Talk","A talk station that plays as hours of spoken segments instead of songs.","ur_PsGA1D4U",0],
+  ["Thrillbilly Mud Club Radio","Metal · Crunk","Thrash metal crashed into crunk: Metallica, Slayer and Megadeth next to Lil Jon and Three 6 Mafia.","3aHdUYVFH9g",20],
+  ["WKTT","Talk","The long-running GTA talk station returns with call-ins and opinion segments.","Yo0JCZsmN4E",0],
+  ["The Sniper of La Perle","Mixtape","An on-demand playlist of Haitian kompa and hip-hop. Unlock it by scanning four posters around La Perle and Crosstown.","zYTQuZuzSqY",22]
+];
+// Chapter start times (seconds, base-36) from each video's YouTube chapters.
+const CHAPTERS = Object.fromEntries("Hr4UgN6UbSw:0,35,ac,kj,rq,13j,1f8,1oc,1xp,22o,29p,2ku,2ug,306,38z,3g1,3r9,3xi,44e,4cz,4lb,4w0,55b,5gj,5o8,5vv,61j,67b,6h3,6od,6xw,7cu,7pn,80y,89d;ZSCLM_kGzkU:0,7d,d8,oo,te,y1,13r,1e2,1l6,1qv,20b,285,2fn,2ni,2ut,32z,38v,3fq,3n2,3v4,42l,49f,4il,4rh,4z3,56s,5ea,5p7,5vr,62y,69k,6he,6on,6za,75d,7bs,7ji,7qo,7wr;13V3vbCH4cw:0,6j,ci,l7,rm,zt,147,1e6,1hu,1qu,21o,27r,2g6,2oi,2wp,33x,39u,3gx,3q5,3ye,44w,4gm,4tc,511,5b7,5n8,5yu,61d,6ex,6p7,6zk,76t,7b7,7k2,7sk,81d;Y_ELedvsw7U:0,5m,cg,hn,r0,xa,12n,178,1hg,1mn,1t7,20k,25i,2ed,2jn,2tr,309,36k,3gs,3na,3us,444,495,4ej,4kl,4tj,4xn,53u,5e5,5m0,5s9,622,6af,6fu,6ok,6u4,6zw,77s,7fj,7kx,7v7,806,86a,8f5,8lz,8ra,915,99v,9j0,9t2,9yg,a43,adq,ajv,apd,ax1,b3c,b8l,bi7,bq9,c1t,c6d,cex,cit,ctu,d1b,dbz,dhv,doi,dxp,e5f,ea3,eju,ep3,euh,f2x,f7m,fcm,fkf,fsu;gYU6LoX2MAw:0,4c,cy,n1,tn,12s,19s,1km,1ue,224,2cw,2nj,2vh,33q,38v,3fj,3lt,3p7,3z9,48g,4hf,4og,4u4,55a,5ad,5if,5te,60z,68d,6fh,6n0;kyaZvQSUF4k:0,4g,b4,io,q3,xi,13p,196,1hs,1q7,1zh,272,2c9,2kw,2qs,2wp,35w,3dk,3lr,3pw,3we,42v,48a,4h6,4oo,4y5,53v,59c,5hn,5nx,5tv,63r,6c7,6gt,6qd,6xg,75z;zYTQuZuzSqY:0,32,5r,ae,e1,go,js,ll,qa,sg,vp,yn,110,143,17s,1ax,1dj,1g8,1ip,1lc,1n6,1r3;vSgT06Fwrb4:0,6j,ez,m1,ty,10l,19g,1gt,1rj,1z3,297,2hx,2ry,325,39e,3i7,3o6,3vt;Yo0JCZsmN4E:0,3f,7r,jr,pp,10i,18w,1ho,1ne,1ve,1zt,2a3,2g0,303,356,3c6,3ma,3zg,4bt;ur_PsGA1D4U:0,37,ga,u6,19b,1i4,1t3,247,2dy,2m8,2yq,3a6,3p9,3yf,469,4ji,4vd,529,5d2,5py,639,6lf,6u5,73u,7i6,7tt,88s,8qh,96r;W_e5eUNgIqE:0,7a,da,ja,s3,128,1bg,1j0,1ru,20b,274,2e9,2mw,2u4,30u,3a7,3i7,3oe,3xh,44g,4d0,4jm,4qm,4yq,561,5d7,5lh,5sn,63f,6an,6kn,6tc,70t,78k,7ft,7q9,83q,8gt,8rp,968,9jb,9w2,a7u,ajf,azc,bbv,bme,c3s,cds,cqg,d04,dl3,e0q,en3,f0s;GHQk-Ju5mME:0,7j,c0,i7,o3,ur,11s,19h,1ea,1k1,1or,1ul,21o,25e,29x,2iy,2qj,2w1,34j,37n,3dx,3i3,3mt;fqMm_h9VKPc:0,br,hc,vr,139,1bu,1k2,1sk,21b,28f,2dr,2nv,2up,341,39a,3dt,3q5,3xe,45w,4hf,4o2,4xi;-RwK09PE-lw:0,7n,ca,jv,rt,y8,14b,1fc,1na,1un,1zw,28l,2fy,2ma,2vy,32k,392,3is,3ob,3vv,44x,49a,4hr,4qu,4ww,565,5cs,5ir,5sm,5zp,6ap,6i2,6r3,6yu,74q,7b2,7je,7tq,7ze,84a,8ce,8kf,8tz,92q,9c9,9i1,9pl,9yy,a7w,agd,ap2,axp,b52,ba7,bhf,bq3,bwn,c2s,cbc,ciw,cnm,cvz,d3i,d9n,do6,dz0,e9a,ei9,ep9;adG_RoLgOfo:0,dk,pb,193,1tn,232,2ef,30a,3a4,3m0,3tr,4d7,4o2,55w,5f5,5u6;HCpVk2SHjTs:0,c,4g,as,ey,k5,oq,tg,yg,13q,19b,1ef,1ju,1oy,1ty,1yc,25v;ZF_ae0Nyb5A:0,60,d0,n2,vc,123,19s,1id,1rt,20d,299,2ee,2md,2w2,361,3d2,3kr,3tp,3zn,45a,4ea,4lb,4tp,514,5bs,5j1,5uh,64z,6f8,6md,6w4,73z,79p,7i1,7pi,808,86r,8l2,8tx,92d,9b7,9jt,9ru,a25,adp,ami,aww,b4k,bbi,bjz,brp,c06,c8z,ch9,cmq,cul,d4o,dk8,dsx,dyc,e8q,eg4,em0,euj,f10,fcl,fn4,fzg,g87,ghp,gom,gus;-P5WQoSdhHg:0,65,b8,ib,nn,ta,10u,14w,1bz,1i6,1rb,1yk,23h,28w,2ge,2pd,2x9,31w,380,3hn,3nn,3s3,3ym;qtrFpZpj13g:0,59,9f,fs,no,to,zm,159,18t,1fe,1m5,1tp,211,23z,290,2e1,2j7,2rd,2zn,351,3dp,3k7,3pr,3xx,42m,478,4f3,4ka,4pj,4xs;3aHdUYVFH9g:0,71,if,pe,ua,11k,17v,1e8,1o1,1w8,20n,27c,2bl,2hz,2vx,30z,37u,3df,3il,3pr;5EEEOXYH4f4:0,d,5n,9p,db,gt,m0,r5,w8,11m,16s,1c4,1gs,1nj,1tw,1x3,20x,24h,28w,2do,2jc,2o1,2wa,31e,36a,3b2,3ga,3gq,3ka,3r0,3x4,41c,46r,49k,4c4,4iw,4og,4um,508,573,5ca;Z_Kcq0-wmJ4:0,68,ad,eu,k6,qu,ui,10e,18a,1d8,1j8,1mp,1tj,21i,27z,2de,2kw,2u6,30o,373,3e9,3ix,3oc,3s8;Kvarw9q9Zh4:0,5c,b7,h8,q2,y5,13u,1ad,1hk,1pw,1wc,21x,29h,2fm,2kk,2td,2zr,361,3cb,3iw,3ob,3ss,3yw,45a,4bg,4nn,4tp;GqLYAUj9Gco:0,5q,dk,jn,x2,155,1hk,1rx,21k,29x,2jc,2qf,2xj,38t,3gf,3p9,3wi,453,4dk,4lc,4wb,554,5ej,5mx,5sd;LxdLqlBJIV0:0,4h,9h,fy,oj,qw,yo,150,17p,1aw,1gj,1jq,1tg,228,255,293,2cf,2et,2ki,2px,2wu,32l,37j,3bi,3id,3my,3qj,3tu,406,451,4au,4k0,4q3,4xe,538,59e,5e6,5lp,5q1,5tb,5wk,67x,6dq,6j6,6r2,6v8,6zo,738,7a1,7f1,7ka,7s6,7y0,84m,8dl,8kn,8pj,8t8,8xe,95r,9aa,9e2,9ix,9os,9ur,9z3,a5d,ace,ah6,aoc,au4,ayh,b32,bck,biu,bng,bsw,bye,c32,caw".split(";").map(p => {
+  const [id, list] = p.split(":");
+  return [id, list.split(",").map(n => parseInt(n, 36))];
+}));
+const lastPick = {};
+function randomStart(id) {
+  const ch = CHAPTERS[id];
+  if (!ch || !ch.length) return 0;
+  let i;
+  do { i = Math.floor(Math.random() * ch.length); } while (ch.length > 1 && i === lastPick[id]);
+  lastPick[id] = i;
+  return ch[i];
+}
+function tuneIn(a) {
+  a.dataset.t = randomStart(a.dataset.id);
+  a.href = `https://www.youtube.com/watch?v=${a.dataset.id}&t=${a.dataset.t}s`;
+}
+const grid = document.getElementById("grid");
+grid.innerHTML = stations.map(([name, genre, desc, id, songs]) => {
+  const inner = `
+      <span class="top"><span class="name">${name}</span><span class="genre">${genre}</span></span>
+      <p class="desc">${desc}</p>`;
+  if (!id) return `<li><div class="station soon">${inner}<span class="play">Coming soon</span></div></li>`;
+  return `<li><a class="station${genre === "Mixtape" ? " mix" : ""}" data-id="${id}" href="https://www.youtube.com/watch?v=${id}" target="_blank" rel="noopener">${inner}<span class="play">▶ Tune in at random${songs ? ` · ${songs} songs` : " · Full station"}</span></a></li>`;
+}).join("");
+// Pick a fresh chapter right before the link opens (covers tap, click, middle-click and keyboard).
+["pointerdown", "click", "keydown"].forEach(ev => grid.addEventListener(ev, e => {
+  if (ev === "keydown" && e.key !== "Enter") return;
+  const a = e.target.closest("a.station[data-id]");
+  if (a) tuneIn(a);
+}, true));
+// ---- In-page player. If YouTube's player can't load, cards keep opening YouTube in a new tab.
+const byId = Object.fromEntries(stations.filter(s => s[3]).map(s => [s[3], s]));
+const ids = Object.keys(byId);
+const $ = id => document.getElementById(id);
+let ytReady = false, player = null, current = null;
+window.onYouTubeIframeAPIReady = () => { ytReady = true; };
+const api = document.createElement("script");
+api.src = "https://www.youtube.com/iframe_api";
+document.head.appendChild(api);
+
+function play(id, t) {
+  current = id;
+  const ytUrl = `https://www.youtube.com/watch?v=${id}&t=${t}s`;
+  $("deckName").textContent = byId[id][0];
+  $("deckMsg").textContent = "";
+  $("bOpen").href = ytUrl;
+  $("deck").hidden = false;
+  document.body.classList.add("deck-open");
+  document.querySelectorAll(".station.on").forEach(el => el.classList.remove("on"));
+  const card = document.querySelector(`.station[data-id="${id}"]`);
+  if (card) card.classList.add("on");
+  if (!player) {
+    player = new YT.Player("yt", {
+      width: "100%", height: "100%", videoId: id,
+      playerVars: { start: t, autoplay: 1, playsinline: 1, rel: 0 },
+      events: {
+        onStateChange: e => { $("bPlay").textContent = e.data === 1 ? "Pause" : "Play"; },
+        onError: () => {
+          $("deckMsg").textContent = location.protocol === "file:"
+            ? "YouTube won't play inside a page opened from your computer. Put the page online, or use the YouTube button."
+            : "This one won't play here. Use the YouTube button to listen.";
+        }
+      }
+    });
+  } else {
+    player.loadVideoById({ videoId: id, startSeconds: t });
+  }
+}
+
+grid.addEventListener("click", e => {
+  const a = e.target.closest("a.station[data-id]");
+  if (!a || !ytReady || e.metaKey || e.ctrlKey || e.shiftKey) return;
+  e.preventDefault();
+  play(a.dataset.id, Number(a.dataset.t) || randomStart(a.dataset.id));
+});
+$("bPlay").addEventListener("click", () => {
+  if (!player || !player.getPlayerState) return;
+  player.getPlayerState() === 1 ? player.pauseVideo() : player.playVideo();
+});
+$("bSong").addEventListener("click", () => current && play(current, randomStart(current)));
+$("bStation").addEventListener("click", () => {
+  const others = ids.filter(x => x !== current);
+  const next = others[Math.floor(Math.random() * others.length)];
+  play(next, randomStart(next));
+});
+$("bClose").addEventListener("click", () => {
+  if (player && player.stopVideo) player.stopVideo();
+  $("deck").hidden = true;
+  document.body.classList.remove("deck-open");
+  document.querySelectorAll(".station.on").forEach(el => el.classList.remove("on"));
+});
+</script>
+</body>
+</html>
