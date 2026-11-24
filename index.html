@@ -190,6 +190,8 @@ footer a { color: var(--cyan); }
 .deck-ctl button:hover, .deck-ctl a:hover { background: var(--pink); color: var(--cream); }
 .deck-ctl button:focus-visible, .deck-ctl a:focus-visible { outline: 2px solid var(--sun); outline-offset: 2px; }
 .deck-ctl .ghost { background: transparent; color: var(--muted); border: 1.5px solid rgba(205,182,230,0.4); }
+.deck-ctl .pp { width: 5.6em; display: inline-flex; align-items: center; justify-content: center; gap: 6px; }
+.deck-ctl .pp svg { width: 12px; height: 12px; fill: currentColor; flex: none; }
 .vol { display: flex; align-items: center; gap: 6px; font: 600 0.8rem var(--body); color: var(--cyan); text-transform: uppercase; letter-spacing: 0.08em; }
 .vol input { width: 84px; accent-color: var(--pink); cursor: pointer; }
 .vol-num { width: 2.2em; text-align: right; color: var(--cream); font-variant-numeric: tabular-nums; letter-spacing: 0; }
@@ -232,7 +234,7 @@ body.deck-open main { padding-bottom: 6rem; }
       <span class="deck-msg" id="deckMsg"></span>
     </div>
     <div class="deck-ctl">
-      <button type="button" id="bPlay">Pause</button>
+      <button type="button" id="bPlay" class="pp"><svg viewBox="0 0 16 16" aria-hidden="true"><rect x="3" y="2" width="3.5" height="12" rx="1"/><rect x="9.5" y="2" width="3.5" height="12" rx="1"/></svg><span>Pause</span></button>
       <button type="button" id="bSong">New song</button>
       <button type="button" id="bStation">Next station</button>
       <label class="vol" for="vol"><span aria-hidden="true">Vol</span>
@@ -325,6 +327,13 @@ const api = document.createElement("script");
 api.src = "https://www.youtube.com/iframe_api";
 document.head.appendChild(api);
 
+const PP_PAUSE = '<svg viewBox="0 0 16 16" aria-hidden="true"><rect x="3" y="2" width="3.5" height="12" rx="1"/><rect x="9.5" y="2" width="3.5" height="12" rx="1"/></svg><span>Pause</span>', PP_PLAY = '<svg viewBox="0 0 16 16" aria-hidden="true"><path d="M4 2.2v11.6a.8.8 0 0 0 1.2.7l9-5.8a.8.8 0 0 0 0-1.4l-9-5.8A.8.8 0 0 0 4 2.2z"/></svg><span>Play</span>';
+let ppShowsPause = true;
+function setPP(playing) {
+  if (playing === ppShowsPause) return;
+  ppShowsPause = playing;
+  $("bPlay").innerHTML = playing ? PP_PAUSE : PP_PLAY;
+}
 function play(id, t) {
   current = id;
   const ytUrl = `https://www.youtube.com/watch?v=${id}&t=${t}s`;
@@ -342,7 +351,7 @@ function play(id, t) {
       playerVars: { start: t, autoplay: 1, playsinline: 1, rel: 0, controls: 0, disablekb: 1, fs: 0, iv_load_policy: 3, cc_load_policy: 0 },
       events: {
         onReady: applyVolume,
-        onStateChange: e => { $("bPlay").textContent = e.data === 1 ? "Pause" : "Play"; },
+        onStateChange: e => { setPP(e.data === 1 || e.data === 3); },
         onError: () => {
           $("deckMsg").textContent = location.protocol === "file:"
             ? "YouTube won't play inside a page opened from your computer. Put the page online, or use the YouTube button."
