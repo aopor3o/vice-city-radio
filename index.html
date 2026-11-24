@@ -189,6 +189,9 @@ footer a { color: var(--cyan); }
 .deck-ctl button:hover, .deck-ctl a:hover { background: var(--pink); color: var(--cream); }
 .deck-ctl button:focus-visible, .deck-ctl a:focus-visible { outline: 2px solid var(--sun); outline-offset: 2px; }
 .deck-ctl .ghost { background: transparent; color: var(--muted); border: 1.5px solid rgba(205,182,230,0.4); }
+.vol { display: flex; align-items: center; gap: 6px; font: 600 0.8rem var(--body); color: var(--cyan); text-transform: uppercase; letter-spacing: 0.08em; }
+.vol input { width: 110px; accent-color: var(--pink); cursor: pointer; }
+.vol-num { width: 2.2em; text-align: right; color: var(--cream); font-variant-numeric: tabular-nums; letter-spacing: 0; }
 body.deck-open main { padding-bottom: 12rem; }
 .station.on { border-color: var(--pink); box-shadow: 0 0 0 1px var(--pink), 0 0 24px rgba(255,79,163,0.35); }
 .station.on .play::after { content: " · On air"; color: var(--pink); }
@@ -228,6 +231,10 @@ body.deck-open main { padding-bottom: 12rem; }
       <button type="button" id="bPlay">Pause</button>
       <button type="button" id="bSong">New song</button>
       <button type="button" id="bStation">Next station</button>
+      <label class="vol" for="vol"><span aria-hidden="true">Vol</span>
+        <input type="range" id="vol" min="0" max="100" step="1" value="60" aria-label="Volume">
+        <span id="volNum" class="vol-num">60</span>
+      </label>
       <a id="bOpen" href="#" target="_blank" rel="noopener" class="ghost">YouTube ↗</a>
       <button type="button" id="bClose" class="ghost" aria-label="Turn off radio">Off</button>
     </div>
@@ -299,6 +306,16 @@ const byId = Object.fromEntries(stations.filter(s => s[3]).map(s => [s[3], s]));
 const ids = Object.keys(byId);
 const $ = id => document.getElementById(id);
 let ytReady = false, player = null, current = null;
+let volume = 60;
+try { const v = parseInt(localStorage.getItem("vc-volume"), 10); if (v >= 0 && v <= 100) volume = v; } catch (e) {}
+$("vol").value = volume; $("volNum").textContent = volume;
+function applyVolume() { if (player && player.setVolume) { player.setVolume(volume); volume === 0 ? player.mute() : player.unMute(); } }
+$("vol").addEventListener("input", e => {
+  volume = Number(e.target.value);
+  $("volNum").textContent = volume;
+  applyVolume();
+  try { localStorage.setItem("vc-volume", String(volume)); } catch (err) {}
+});
 window.onYouTubeIframeAPIReady = () => { ytReady = true; };
 const api = document.createElement("script");
 api.src = "https://www.youtube.com/iframe_api";
@@ -320,6 +337,7 @@ function play(id, t) {
       width: "100%", height: "100%", videoId: id,
       playerVars: { start: t, autoplay: 1, playsinline: 1, rel: 0 },
       events: {
+        onReady: applyVolume,
         onStateChange: e => { $("bPlay").textContent = e.data === 1 ? "Pause" : "Play"; },
         onError: () => {
           $("deckMsg").textContent = location.protocol === "file:"
