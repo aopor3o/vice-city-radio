@@ -174,7 +174,7 @@ footer a { color: var(--cyan); }
   border-radius: 10px; overflow: hidden; background: #000;
   border: 1.5px solid var(--cyan);
 }
-.screen iframe { width: 100%; height: 100%; display: block; border: 0; }
+.screen iframe { width: 100%; height: 100%; display: block; border: 0; pointer-events: none; }
 .deck-info { display: flex; flex-direction: column; min-width: 0; flex: 1 1 180px; }
 .deck-label { font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.12em; color: var(--cyan); }
 .deck-name { font-family: var(--display); font-weight: 400; font-size: 1.5rem; line-height: 1.2; color: var(--pink); }
@@ -335,7 +335,7 @@ function play(id, t) {
   if (!player) {
     player = new YT.Player("yt", {
       width: "100%", height: "100%", videoId: id,
-      playerVars: { start: t, autoplay: 1, playsinline: 1, rel: 0 },
+      playerVars: { start: t, autoplay: 1, playsinline: 1, rel: 0, controls: 0, disablekb: 1, fs: 0, iv_load_policy: 3, cc_load_policy: 0 },
       events: {
         onReady: applyVolume,
         onStateChange: e => { $("bPlay").textContent = e.data === 1 ? "Pause" : "Play"; },
