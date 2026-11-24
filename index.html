@@ -232,8 +232,8 @@ body.deck-open main { padding-bottom: 12rem; }
       <button type="button" id="bSong">New song</button>
       <button type="button" id="bStation">Next station</button>
       <label class="vol" for="vol"><span aria-hidden="true">Vol</span>
-        <input type="range" id="vol" min="0" max="100" step="1" value="60" aria-label="Volume">
-        <span id="volNum" class="vol-num">60</span>
+        <input type="range" id="vol" min="0" max="100" step="1" value="20" aria-label="Volume">
+        <span id="volNum" class="vol-num">20</span>
       </label>
       <a id="bOpen" href="#" target="_blank" rel="noopener" class="ghost">YouTube ↗</a>
       <button type="button" id="bClose" class="ghost" aria-label="Turn off radio">Off</button>
@@ -306,7 +306,7 @@ const byId = Object.fromEntries(stations.filter(s => s[3]).map(s => [s[3], s]));
 const ids = Object.keys(byId);
 const $ = id => document.getElementById(id);
 let ytReady = false, player = null, current = null;
-let volume = 60;
+let volume = 20;
 try { const v = parseInt(localStorage.getItem("vc-volume"), 10); if (v >= 0 && v <= 100) volume = v; } catch (e) {}
 $("vol").value = volume; $("volNum").textContent = volume;
 function applyVolume() { if (player && player.setVolume) { player.setVolume(volume); volume === 0 ? player.mute() : player.unMute(); } }
