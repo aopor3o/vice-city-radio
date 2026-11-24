@@ -166,38 +166,42 @@ footer a { color: var(--cyan); }
   max-width: 1080px; margin: 0 auto;
   padding-left: max(16px, env(safe-area-inset-left, 0px));
   padding-right: max(16px, env(safe-area-inset-right, 0px));
-  padding-block: 10px;
-  display: flex; align-items: center; gap: 14px; flex-wrap: wrap;
+  padding-block: 8px;
+  display: flex; align-items: center; gap: 12px; flex-wrap: nowrap;
 }
 .screen {
-  width: 200px; height: 113px; flex: none;
+  width: 112px; height: 63px; flex: none;
   border-radius: 10px; overflow: hidden; background: #000;
   border: 1.5px solid var(--cyan);
 }
 .screen iframe { width: 100%; height: 100%; display: block; border: 0; pointer-events: none; }
-.deck-info { display: flex; flex-direction: column; min-width: 0; flex: 1 1 180px; }
+.deck-info { display: flex; flex-direction: column; min-width: 0; flex: 1 1 auto; }
+.deck-info > span { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .deck-label { font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.12em; color: var(--cyan); }
-.deck-name { font-family: var(--display); font-weight: 400; font-size: 1.5rem; line-height: 1.2; color: var(--pink); }
+.deck-name { font-family: var(--display); font-weight: 400; font-size: 1.2rem; line-height: 1.25; color: var(--pink); }
 .deck-msg { font-size: 0.85rem; color: var(--sun); }
-.deck-ctl { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; }
+.deck-ctl { display: flex; gap: 6px; flex-wrap: nowrap; align-items: center; flex: none; }
 .deck-ctl button, .deck-ctl a {
-  font: 600 0.9rem var(--body);
+  font: 600 0.82rem var(--body);
   color: var(--night); background: var(--cyan);
-  border: 0; border-radius: 999px; padding: 0.5rem 0.95rem;
+  border: 0; border-radius: 999px; padding: 0.4rem 0.8rem; white-space: nowrap;
   cursor: pointer; text-decoration: none;
 }
 .deck-ctl button:hover, .deck-ctl a:hover { background: var(--pink); color: var(--cream); }
 .deck-ctl button:focus-visible, .deck-ctl a:focus-visible { outline: 2px solid var(--sun); outline-offset: 2px; }
 .deck-ctl .ghost { background: transparent; color: var(--muted); border: 1.5px solid rgba(205,182,230,0.4); }
 .vol { display: flex; align-items: center; gap: 6px; font: 600 0.8rem var(--body); color: var(--cyan); text-transform: uppercase; letter-spacing: 0.08em; }
-.vol input { width: 110px; accent-color: var(--pink); cursor: pointer; }
+.vol input { width: 84px; accent-color: var(--pink); cursor: pointer; }
 .vol-num { width: 2.2em; text-align: right; color: var(--cream); font-variant-numeric: tabular-nums; letter-spacing: 0; }
-body.deck-open main { padding-bottom: 12rem; }
+body.deck-open main { padding-bottom: 6rem; }
 .station.on { border-color: var(--pink); box-shadow: 0 0 0 1px var(--pink), 0 0 24px rgba(255,79,163,0.35); }
 .station.on .play::after { content: " · On air"; color: var(--pink); }
-@media (max-width: 560px) {
-  .screen { width: 100%; height: auto; aspect-ratio: 16 / 9; max-width: 100%; }
-  body.deck-open main { padding-bottom: 26rem; }
+@media (max-width: 820px) {
+  .deck-in { flex-wrap: wrap; row-gap: 8px; }
+  .screen { width: 96px; height: 54px; }
+  .deck-info { flex: 1 1 0; }
+  .deck-ctl { width: 100%; flex-wrap: wrap; }
+  body.deck-open main { padding-bottom: 10rem; }
 }
 </style>
 </head>
